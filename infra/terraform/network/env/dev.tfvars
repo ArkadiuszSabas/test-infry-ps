@@ -1,6 +1,6 @@
-subscription_id                 = "fe31d3c8-576f-4c09-913c-0635306834ff0"
-location                        = "swedencentral"
-network_resource_group_name     = "rg-ocr-dev-net-arksab"
+subscription_id             = "fe31d3c8-576f-4c09-913c-0635306834ff0"
+location                    = "swedencentral"
+network_resource_group_name = "rg-ocr-dev-net-arksab"
 # Existing Private DNS Zones are managed in a separate resource group.
 private_dns_resource_group_name = "rg-em-dmai-sdc-dev"
 application_resource_group_name = "rg-ocr-dev-arksab"
