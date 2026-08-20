@@ -72,7 +72,7 @@ jobs:
       - run: terraform fmt -check -recursive
       - name: Initialize isolated network state
         run: >-
-          terraform init -input=false -lockfile=readonly
+          terraform init -input=false 
           -backend-config="resource_group_name=${TF_BACKEND_RESOURCE_GROUP}"
           -backend-config="storage_account_name=${TF_BACKEND_STORAGE_ACCOUNT}"
           -backend-config="container_name=${TF_BACKEND_CONTAINER}"
