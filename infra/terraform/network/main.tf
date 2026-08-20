@@ -184,7 +184,7 @@ data "azurerm_private_dns_zone" "this" {
 resource "azurerm_private_dns_zone_virtual_network_link" "this" {
   for_each = data.azurerm_private_dns_zone.this
 
-  name                  = "pdnslink-${replace(each.key, "_", "-")}"
+  name                  = "pdnslink-${var.virtual_network_name}-${replace(each.key, "_", "-")}"
   resource_group_name   = each.value.resource_group_name
   private_dns_zone_name = each.value.name
   virtual_network_id    = data.azurerm_virtual_network.existing.id
