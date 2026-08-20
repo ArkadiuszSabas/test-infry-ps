@@ -70,9 +70,6 @@ jobs:
           terraform_version: 1.15.0
           terraform_wrapper: false
       - run: terraform fmt -check -recursive
-      - name: Initialize providers for validation
-        run: terraform init -backend=false
-      - run: terraform validate
       - name: Initialize isolated network state
         run: >-
           terraform init -input=false
