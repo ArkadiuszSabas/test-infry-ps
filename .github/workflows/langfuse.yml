@@ -16,10 +16,7 @@ permissions:
 jobs:
   langfuse:
     environment: dev
-    runs-on:
-      - self-hosted
-      - linux
-      - proservice-dev-runner-placeholder
+    runs-on: ubuntu-latest
     concurrency:
       group: proservice-terraform-dev
       cancel-in-progress: false

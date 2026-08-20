@@ -174,18 +174,15 @@ resource "azurerm_subnet_nat_gateway_association" "container_apps" {
   nat_gateway_id = azurerm_nat_gateway.this.id
 }
 
-resource "azurerm_private_dns_zone" "this" {
+data "azurerm_private_dns_zone" "this" {
   for_each = local.configured_private_dns_zone_names
 
   name                = each.value
-  resource_group_name = data.azurerm_resource_group.network.name
-  tags                = var.tags
-
-  depends_on = [terraform_data.approved_design_guard]
+  resource_group_name = var.private_dns_resource_group_name
 }
 
 resource "azurerm_private_dns_zone_virtual_network_link" "this" {
-  for_each = azurerm_private_dns_zone.this
+  for_each = data.azurerm_private_dns_zone.this
 
   name                  = "pdnslink-${replace(each.key, "_", "-")}"
   resource_group_name   = each.value.resource_group_name
@@ -218,8 +215,8 @@ resource "azurerm_private_dns_a_record" "container_apps_environment" {
   for_each = local.container_apps_environment_private_dns
 
   name                = each.value.default_domain_prefix
-  zone_name           = azurerm_private_dns_zone.this[each.value.private_dns_zone_key].name
-  resource_group_name = azurerm_private_dns_zone.this[each.value.private_dns_zone_key].resource_group_name
+  zone_name           = data.azurerm_private_dns_zone.this[each.value.private_dns_zone_key].name
+  resource_group_name = data.azurerm_private_dns_zone.this[each.value.private_dns_zone_key].resource_group_name
   ttl                 = 300
   records             = [module.private_endpoints.private_endpoint_ip_addresses[each.key]]
   tags                = var.tags
@@ -229,8 +226,8 @@ resource "azurerm_private_dns_a_record" "container_apps_environment_wildcard" {
   for_each = local.container_apps_environment_private_dns
 
   name                = "*.${each.value.default_domain_prefix}"
-  zone_name           = azurerm_private_dns_zone.this[each.value.private_dns_zone_key].name
-  resource_group_name = azurerm_private_dns_zone.this[each.value.private_dns_zone_key].resource_group_name
+  zone_name           = data.azurerm_private_dns_zone.this[each.value.private_dns_zone_key].name
+  resource_group_name = data.azurerm_private_dns_zone.this[each.value.private_dns_zone_key].resource_group_name
   ttl                 = 300
   records             = [module.private_endpoints.private_endpoint_ip_addresses[each.key]]
   tags                = var.tags

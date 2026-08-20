@@ -19,6 +19,11 @@ variable "network_resource_group_name" {
   type        = string
 }
 
+variable "private_dns_resource_group_name" {
+  description = "Existing resource group containing the Private DNS Zones."
+  type        = string
+}
+
 variable "application_resource_group_name" {
   description = "Existing ProService resource group containing Private Endpoint target resources."
   type        = string

@@ -28,10 +28,7 @@ permissions:
 jobs:
   build:
     environment: ${{ inputs.environment || 'dev' }}
-    runs-on:
-      - self-hosted
-      - linux
-      - "proservice-${{ inputs.environment || 'dev' }}-runner-placeholder"
+    runs-on: ubuntu-latest
     concurrency:
       group: proservice-application-build-${{ inputs.environment || 'dev' }}
       cancel-in-progress: false

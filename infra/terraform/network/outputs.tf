@@ -19,7 +19,7 @@ output "nat_gateway_public_ip_address" {
 }
 
 output "private_dns_zone_ids" {
-  value       = { for key, zone in azurerm_private_dns_zone.this : key => zone.id }
+  value       = { for key, zone in data.azurerm_private_dns_zone.this : key => zone.id }
   description = "Private DNS zone IDs used by the network completion phase."
 }
 
