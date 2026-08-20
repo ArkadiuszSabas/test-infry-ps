@@ -6,7 +6,7 @@ private_dns_resource_group_name = "rg-em-dmai-sdc-dev"
 application_resource_group_name = "rg-ocr-dev-arksab"
 
 # Set true only after ProService approves the network design and the ACA subnet delegation.
-network_design_approved = false
+network_design_approved = true
 
 virtual_network_name           = "vnet-ocr-dev-arksab"
 expected_network_address_space = ["10.33.24.0/21"]
