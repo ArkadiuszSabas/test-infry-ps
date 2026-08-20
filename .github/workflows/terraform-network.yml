@@ -70,15 +70,17 @@ jobs:
           terraform_version: 1.15.0
           terraform_wrapper: false
       - run: terraform fmt -check -recursive
+      - name: Initialize providers for validation
+        run: terraform init -backend=false
+      - run: terraform validate
       - name: Initialize isolated network state
         run: >-
-          terraform init -input=false 
+          terraform init -input=false
           -backend-config="resource_group_name=${TF_BACKEND_RESOURCE_GROUP}"
           -backend-config="storage_account_name=${TF_BACKEND_STORAGE_ACCOUNT}"
           -backend-config="container_name=${TF_BACKEND_CONTAINER}"
           -backend-config="key=${TF_ENVIRONMENT}.network.tfstate"
           -backend-config="use_azuread_auth=true"
-      - run: terraform validate
       - name: Plan complete network desired state
         run: terraform plan -input=false -lock-timeout=5m -var-file="env/${TF_ENVIRONMENT}.tfvars" -out=tfplan
       - name: Apply generated network plan
