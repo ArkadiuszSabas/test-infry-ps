@@ -18,7 +18,7 @@ container_apps_infrastructure_subnet_name = "snet-ocr-dev-aca-arksab"
 security_design_approved        = true
 resource_provider_list_verified = true
 runtime_dependencies_ready      = false
-foundry_enabled                 = false
+foundry_enabled                 = true
 foundry_cmk_enabled             = false
 
 # Confirm global availability and replace the explicit tokens before planning.
@@ -31,8 +31,8 @@ resource_names = {
   monitor_private_link       = "ampls-ocr-dev-arksab"
   service_bus                = "sb-ocr-dev-arksab"
   document_intelligence      = "di-ocr-dev-arksab"
-  foundry_account            = "ai-ocr-dev-arksab"
-  foundry_project            = "aifp-ocr-dev-arksab"
+  foundry_account            = "ai-ocr-dev-arksab1"
+  foundry_project            = "aifp-ocr-dev-arksab1"
   container_apps_environment = "cae-ocr-dev-arksab"
   postgresql                 = "psql-ocr-dev-arksab"
 }

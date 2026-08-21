@@ -52,7 +52,7 @@ private_endpoints = {
   }
   foundry = {
     name                           = "pep-ocr-foundry-dev-arksab"
-    private_connection_resource_id = "/subscriptions/16060ea2-28be-4b09-8e6d-060249d69ddd/resourceGroups/rg-ocr-dev-arksab/providers/Microsoft.CognitiveServices/accounts/ai-ocr-dev-arksab"
+    private_connection_resource_id = "/subscriptions/16060ea2-28be-4b09-8e6d-060249d69ddd/resourceGroups/rg-ocr-dev-arksab/providers/Microsoft.CognitiveServices/accounts/ai-ocr-dev-arksab1"
     subresource_names              = ["account"]
     private_dns_zone_ids = [
       "/subscriptions/16060ea2-28be-4b09-8e6d-060249d69ddd/resourceGroups/rg-em-dmai-sdc-dev/providers/Microsoft.Network/privateDnsZones/privatelink.cognitiveservices.azure.com",
