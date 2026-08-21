@@ -296,6 +296,7 @@ module "ai_services" {
   public_network_access_enabled                       = true
   document_intelligence_public_network_access_enabled = false
   network_acls_default_action                         = "Deny"
+  foundry_network_acls_default_action                 = "Allow"
   document_intelligence_network_acls_ip_rules         = []
   document_intelligence_user_principal_ids            = {}
   foundry_user_principal_ids                          = {}

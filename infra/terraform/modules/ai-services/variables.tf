@@ -85,6 +85,16 @@ variable "network_acls_default_action" {
   }
 }
 
+variable "foundry_network_acls_default_action" {
+  description = "Default network ACL action for the Azure AI Foundry account."
+  type        = string
+
+  validation {
+    condition     = contains(["Allow", "Deny"], var.foundry_network_acls_default_action)
+    error_message = "Foundry network ACL default action must be Allow or Deny."
+  }
+}
+
 variable "document_intelligence_network_acls_ip_rules" {
   description = "Static public IPv4 addresses allowed to reach Document Intelligence."
   type        = set(string)
