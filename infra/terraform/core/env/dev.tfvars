@@ -1,11 +1,18 @@
-subscription_id                 = "fe31d3c8-576f-4c09-913c-0635306834ff0"
+subscription_id                 = "16060ea2-28be-4b09-8e6d-060249d69ddd"
 location                        = "swedencentral"
 environment                     = "dev"
 application_resource_group_name = "rg-ocr-dev-arksab"
 network_resource_group_name     = "rg-ocr-dev-net-arksab"
 
-# Replace with output container_apps_infrastructure_subnet_id from phase 01.
-container_apps_infrastructure_subnet_id = "REPLACE_PHASE_01_CONTAINER_APPS_SUBNET_ID"
+cmk = {
+  key_vault_name                = "kv-ocr-dev-cmk-arksab"
+  key_vault_resource_group_name = "rg-ocr-dev-arksab"
+  key_name                      = "cmk2048"
+}
+
+# Existing network objects read directly by Core.
+virtual_network_name                      = "vnet-ocr-dev-arksab"
+container_apps_infrastructure_subnet_name = "snet-ocr-dev-aca-arksab"
 
 # Set true only after the matching ProService decisions are formally approved.
 security_design_approved        = false
@@ -14,18 +21,18 @@ runtime_dependencies_ready      = false
 
 # Confirm global availability and replace the explicit tokens before planning.
 resource_names = {
-  key_vault                  = "REPLACE_KV_NAME"
-  storage_account            = "REPLACE_STORAGE_NAME"
-  container_registry         = "REPLACE_ACR_NAME"
-  log_analytics              = "law-ocr-dev"
-  application_insights       = "appi-ocr-dev"
-  monitor_private_link       = "ampls-ocr-dev"
-  service_bus                = "REPLACE_SERVICE_BUS_NAME"
-  document_intelligence      = "REPLACE_DOCUMENT_INTELLIGENCE_NAME"
-  foundry_account            = "REPLACE_FOUNDRY_ACCOUNT_NAME"
-  foundry_project            = "aifp-ocr-dev"
-  container_apps_environment = "cae-ocr-dev"
-  postgresql                 = "REPLACE_POSTGRESQL_NAME"
+  key_vault                  = "kv-ocr-dev-arksab"
+  storage_account            = "stocrdevarksab01"
+  container_registry         = "acrocrdevarksab01"
+  log_analytics              = "law-ocr-dev-arksab"
+  application_insights       = "appi-ocr-dev-arksab"
+  monitor_private_link       = "ampls-ocr-dev-arksab"
+  service_bus                = "sb-ocr-dev-arksab"
+  document_intelligence      = "di-ocr-dev-arksab"
+  foundry_account            = "ai-ocr-dev-arksab"
+  foundry_project            = "aifp-ocr-dev-arksab"
+  container_apps_environment = "cae-ocr-dev-arksab"
+  postgresql                 = "psql-ocr-dev-arksab"
 }
 
 workload_identities = {

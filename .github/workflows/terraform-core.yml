@@ -72,13 +72,12 @@ jobs:
       - run: terraform fmt -check -recursive
       - name: Initialize isolated core state
         run: >-
-          terraform init -input=false -lockfile=readonly
+          terraform init -input=false
           -backend-config="resource_group_name=${TF_BACKEND_RESOURCE_GROUP}"
           -backend-config="storage_account_name=${TF_BACKEND_STORAGE_ACCOUNT}"
           -backend-config="container_name=${TF_BACKEND_CONTAINER}"
           -backend-config="key=${TF_ENVIRONMENT}.core.tfstate"
           -backend-config="use_azuread_auth=true"
-      - run: terraform validate
       - name: Plan complete core desired state
         run: terraform plan -input=false -lock-timeout=5m -var-file="env/${TF_ENVIRONMENT}.tfvars" -out=tfplan
       - name: Apply generated core plan

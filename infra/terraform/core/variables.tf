@@ -61,8 +61,13 @@ variable "runtime_dependencies_ready" {
   default     = false
 }
 
-variable "container_apps_infrastructure_subnet_id" {
-  description = "Container Apps subnet ID produced by the network foundation phase."
+variable "virtual_network_name" {
+  description = "Existing virtual network containing the Container Apps infrastructure subnet."
+  type        = string
+}
+
+variable "container_apps_infrastructure_subnet_name" {
+  description = "Existing subnet delegated to the Container Apps environment."
   type        = string
 }
 

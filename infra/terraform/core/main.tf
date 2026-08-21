@@ -4,6 +4,12 @@ data "azurerm_resource_group" "environment" {
   name = var.application_resource_group_name
 }
 
+data "azurerm_subnet" "container_apps_infrastructure" {
+  name                 = var.container_apps_infrastructure_subnet_name
+  virtual_network_name = var.virtual_network_name
+  resource_group_name  = var.network_resource_group_name
+}
+
 data "azurerm_key_vault" "cmk" {
   name                = var.cmk.key_vault_name
   resource_group_name = var.cmk.key_vault_resource_group_name
@@ -32,7 +38,7 @@ resource "terraform_data" "approved_design_guard" {
 
     precondition {
       condition = startswith(
-        lower(var.container_apps_infrastructure_subnet_id),
+        lower(data.azurerm_subnet.container_apps_infrastructure.id),
         lower("/subscriptions/${var.subscription_id}/resourceGroups/${var.network_resource_group_name}/providers/Microsoft.Network/virtualNetworks/"),
       )
       error_message = "Container Apps infrastructure subnet must belong to the target subscription and network resource group."
@@ -335,7 +341,7 @@ module "container_apps" {
   location                   = var.location
   resource_group_name        = data.azurerm_resource_group.environment.name
   log_analytics_workspace_id = module.observability.log_analytics_workspace_id
-  infrastructure_subnet_id   = var.container_apps_infrastructure_subnet_id
+  infrastructure_subnet_id   = data.azurerm_subnet.container_apps_infrastructure.id
   public_network_access      = "Disabled"
   app_environment            = var.environment
   registry_server            = module.container_registry.login_server

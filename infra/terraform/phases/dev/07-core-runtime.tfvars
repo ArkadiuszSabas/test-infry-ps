@@ -1,11 +1,18 @@
-subscription_id                 = "fe31d3c8-576f-4c09-913c-0635306834ff0"
+subscription_id                 = "16060ea2-28be-4b09-8e6d-060249d69ddd"
 location                        = "swedencentral"
 environment                     = "dev"
-application_resource_group_name = "rg-ocr-dev"
-network_resource_group_name     = "rg-ocr-dev-net"
+application_resource_group_name = "rg-ocr-dev-arksab"
+network_resource_group_name     = "rg-ocr-dev-net-arksab"
 
-# Replace from phase 01 output and retain the same value used by phase 02.
-container_apps_infrastructure_subnet_id = "REPLACE_PHASE_01_CONTAINER_APPS_SUBNET_ID"
+cmk = {
+  key_vault_name                = "kv-ocr-dev-cmk-arksab"
+  key_vault_resource_group_name = "rg-ocr-dev-arksab"
+  key_name                      = "cmk2048"
+}
+
+# Existing network objects read directly by Core.
+virtual_network_name                      = "vnet-ocr-dev-arksab"
+container_apps_infrastructure_subnet_name = "snet-ocr-dev-aca-arksab"
 
 # Set true only after the security/provider decisions, phase 03, and phase 04 are applied.
 security_design_approved        = false
@@ -13,18 +20,18 @@ resource_provider_list_verified = false
 runtime_dependencies_ready      = true
 
 resource_names = {
-  key_vault                  = "REPLACE_KV_NAME"
-  storage_account            = "REPLACE_STORAGE_NAME"
-  container_registry         = "REPLACE_ACR_NAME"
+  key_vault                  = "kv-ocr-dev"
+  storage_account            = "stocrdev01"
+  container_registry         = "acrocrdev01"
   log_analytics              = "law-ocr-dev"
   application_insights       = "appi-ocr-dev"
   monitor_private_link       = "ampls-ocr-dev"
-  service_bus                = "REPLACE_SERVICE_BUS_NAME"
-  document_intelligence      = "REPLACE_DOCUMENT_INTELLIGENCE_NAME"
-  foundry_account            = "REPLACE_FOUNDRY_ACCOUNT_NAME"
+  service_bus                = "sb-ocr-dev"
+  document_intelligence      = "di-ocr-dev"
+  foundry_account            = "ai-ocr-dev"
   foundry_project            = "aifp-ocr-dev"
   container_apps_environment = "cae-ocr-dev"
-  postgresql                 = "REPLACE_POSTGRESQL_NAME"
+  postgresql                 = "psql-ocr-dev"
 }
 
 workload_identities = {
@@ -130,7 +137,7 @@ container_apps = {
       SERVICE_BUS_DOCUMENT_PROCESSING_QUEUE_NAME             = "document-processing"
       SERVICE_BUS_FULLY_QUALIFIED_NAMESPACE                  = "REPLACE_PHASE_02_SERVICE_BUS_FQDN"
       SERVICE_BUS_PROCESSING_RESULTS_QUEUE_NAME              = "processing-results"
-      STORAGE_ACCOUNT_NAME                                   = "REPLACE_STORAGE_NAME"
+      STORAGE_ACCOUNT_NAME                                   = "stocrdevarksab01"
       STORAGE_BLOB_ENDPOINT                                  = "REPLACE_PHASE_02_STORAGE_BLOB_ENDPOINT"
     }
     dapr = {
@@ -162,7 +169,7 @@ container_apps = {
       DOCMIND_LLMMAGIC_AZURE_AI_FOUNDRY_ENDPOINT                    = "REPLACE_PHASE_02_FOUNDRY_ENDPOINT"
       DOCMIND_LLMMAGIC_AZURE_AI_FOUNDRY_GPT_DEPLOYMENT              = "gpt-5-5"
       DOCMIND_LLMMAGIC_AZURE_AI_FOUNDRY_GPT_MODEL_NAME              = "gpt-5.5"
-      DOCMIND_LLMMAGIC_AZURE_AI_FOUNDRY_PROJECT_NAME                = "aifp-ocr-dev"
+      DOCMIND_LLMMAGIC_AZURE_AI_FOUNDRY_PROJECT_NAME                = "aifp-ocr-dev-arksab"
       DOCMIND_LLMMAGIC_AZURE_BLOB_ACCOUNT_URL                       = "REPLACE_PHASE_02_STORAGE_BLOB_ENDPOINT"
       DOCMIND_LLMMAGIC_AZURE_DI_AUTH_MODE                           = "managed_identity"
       DOCMIND_LLMMAGIC_AZURE_DI_ENDPOINT                            = "REPLACE_PHASE_02_DOCUMENT_INTELLIGENCE_ENDPOINT"
