@@ -8,12 +8,30 @@ variable "subscription_id" {
   }
 }
 
+variable "application_resource_group_name" {
+  description = "Resource group containing the workload user-assigned managed identities."
+  type        = string
+}
+
+variable "workload_identities" {
+  description = "Workload user-assigned managed identities read by the RBAC phase."
+  type = map(object({
+    name = string
+  }))
+
+  validation {
+    condition     = alltrue([for identity in values(var.workload_identities) : trimspace(identity.name) != ""])
+    error_message = "Every workload identity must have a non-empty name."
+  }
+}
+
 variable "role_assignments" {
   description = "Reviewed workload and group role assignments keyed by stable logical name."
   type = map(object({
     scope                            = string
     role_definition_name             = string
-    principal_id                     = string
+    principal_id                     = optional(string)
+    workload_identity_key            = optional(string)
     principal_type                   = string
     skip_service_principal_aad_check = optional(bool, false)
   }))
@@ -29,9 +47,17 @@ variable "role_assignments" {
   validation {
     condition = alltrue([
       for assignment in values(var.role_assignments) :
-      can(regex("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$", assignment.principal_id))
+      assignment.principal_id == null || can(regex("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$", assignment.principal_id))
     ])
-    error_message = "Every RBAC principal_id must be an Entra object ID GUID."
+    error_message = "Every explicit RBAC principal_id must be an Entra object ID GUID."
+  }
+
+  validation {
+    condition = alltrue([
+      for assignment in values(var.role_assignments) :
+      (try(trimspace(assignment.principal_id), "") != "") != (try(trimspace(assignment.workload_identity_key), "") != "")
+    ])
+    error_message = "Every assignment must specify exactly one of principal_id or workload_identity_key."
   }
 
   validation {
