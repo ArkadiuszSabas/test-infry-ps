@@ -74,6 +74,7 @@ resource "azurerm_cognitive_account_project" "foundry" {
 resource "azurerm_cognitive_deployment" "gpt" {
   name                 = var.gpt_deployment.name
   cognitive_account_id = azurerm_cognitive_account.foundry.id
+  rai_policy_name      = "DefaultV2"
 
   dynamic_throttling_enabled = var.gpt_deployment.dynamic_throttling_enabled
   version_upgrade_option     = var.gpt_deployment.version_upgrade_option
