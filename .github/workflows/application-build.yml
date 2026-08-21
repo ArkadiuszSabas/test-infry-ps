@@ -34,7 +34,7 @@ jobs:
       cancel-in-progress: false
     env:
       DEPLOYMENT_ENVIRONMENT: ${{ inputs.environment || 'dev' }}
-      DOCKER_CONFIG: ${{ runner.temp }}/docmind-docker-${{ github.run_id }}-${{ github.run_attempt }}
+      DOCKER_CONFIG: /tmp/docmind-docker-${{ github.run_id }}-${{ github.run_attempt }}
       IMAGE_TAG: ${{ github.sha }}
       PROFILE_ID: ps
     steps:
@@ -147,4 +147,3 @@ jobs:
           path: generated/application-image-manifest.json
           if-no-files-found: error
           retention-days: 30
-
