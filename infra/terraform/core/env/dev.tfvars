@@ -18,7 +18,7 @@ container_apps_infrastructure_subnet_name = "snet-ocr-dev-aca-arksab"
 security_design_approved        = true
 resource_provider_list_verified = true
 runtime_dependencies_ready      = false
-foundry_enabled                 = false
+foundry_enabled                 = true
 
 # Confirm global availability and replace the explicit tokens before planning.
 resource_names = {

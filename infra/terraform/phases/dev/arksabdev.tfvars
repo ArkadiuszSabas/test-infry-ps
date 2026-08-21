@@ -80,10 +80,9 @@ private_endpoints = {
   }
 }
 
-# Replace after Core apply with the `default_domain` of cae-ocr-dev-arksab.
 container_apps_environment_private_dns = {
   private_endpoint_key = "container-apps"
-  default_domain       = "REPLACE_CONTAINER_APPS_DEFAULT_DOMAIN"
+  default_domain       = "orangedune-c57de610.swedencentral.azurecontainerapps.io"
   private_dns_zone_key = "container_apps"
 }
 
