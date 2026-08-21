@@ -15,8 +15,8 @@ virtual_network_name                      = "vnet-ocr-dev-arksab"
 container_apps_infrastructure_subnet_name = "snet-ocr-dev-aca-arksab"
 
 # Set true only after the matching ProService decisions are formally approved.
-security_design_approved        = false
-resource_provider_list_verified = false
+security_design_approved        = true
+resource_provider_list_verified = true
 runtime_dependencies_ready      = false
 
 # Confirm global availability and replace the explicit tokens before planning.
