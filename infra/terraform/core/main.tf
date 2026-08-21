@@ -300,7 +300,7 @@ module "ai_services" {
   document_intelligence_user_principal_ids            = {}
   foundry_user_principal_ids                          = {}
   foundry_openai_user_principal_ids                   = {}
-  cmk_key_vault_key_id                                = data.azurerm_key_vault_key.cmk.versioned_id
+  cmk_key_vault_key_id                                = data.azurerm_key_vault_key.cmk.id
   document_intelligence_cmk_identity_id               = data.azurerm_user_assigned_identity.cmk["cmk-document-intelligence"].id
   document_intelligence_cmk_identity_client_id        = data.azurerm_user_assigned_identity.cmk["cmk-document-intelligence"].client_id
   foundry_cmk_identity_id                             = data.azurerm_user_assigned_identity.cmk["cmk-foundry"].id
