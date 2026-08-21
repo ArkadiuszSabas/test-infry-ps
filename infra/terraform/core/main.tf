@@ -293,7 +293,7 @@ module "ai_services" {
   location                                            = var.location
   document_intelligence_location                      = var.location
   resource_group_name                                 = data.azurerm_resource_group.environment.name
-  public_network_access_enabled                       = false
+  public_network_access_enabled                       = true
   document_intelligence_public_network_access_enabled = false
   network_acls_default_action                         = "Deny"
   document_intelligence_network_acls_ip_rules         = []
