@@ -147,3 +147,4 @@ jobs:
           path: generated/application-image-manifest.json
           if-no-files-found: error
           retention-days: 30
+
