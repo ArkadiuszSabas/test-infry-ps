@@ -283,6 +283,7 @@ module "ai_services" {
   source = "../modules/ai-services"
 
   foundry_enabled                                     = var.foundry_enabled
+  foundry_cmk_enabled                                 = var.foundry_cmk_enabled
   document_intelligence_name                          = var.resource_names.document_intelligence
   document_intelligence_sku_name                      = "S0"
   foundry_account_name                                = var.resource_names.foundry_account

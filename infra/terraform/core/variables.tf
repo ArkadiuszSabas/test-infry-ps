@@ -67,6 +67,12 @@ variable "foundry_enabled" {
   default     = true
 }
 
+variable "foundry_cmk_enabled" {
+  description = "Whether Azure AI Foundry uses the external customer-managed key."
+  type        = bool
+  default     = false
+}
+
 variable "virtual_network_name" {
   description = "Existing virtual network containing the Container Apps infrastructure subnet."
   type        = string

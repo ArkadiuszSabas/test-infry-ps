@@ -19,6 +19,7 @@ security_design_approved        = false
 resource_provider_list_verified = false
 runtime_dependencies_ready      = false # for core-foundation set it to 'false'
 foundry_enabled                 = true
+foundry_cmk_enabled             = false
 
 resource_names = {
   key_vault                  = "kv-ocr-dev"

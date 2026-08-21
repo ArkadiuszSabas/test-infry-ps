@@ -19,6 +19,12 @@ variable "foundry_enabled" {
   default     = true
 }
 
+variable "foundry_cmk_enabled" {
+  description = "Whether Azure AI Foundry uses a customer-managed key and its dedicated user-assigned identity."
+  type        = bool
+  default     = false
+}
+
 variable "foundry_sku_name" {
   description = "Azure AI Foundry account SKU name."
   type        = string

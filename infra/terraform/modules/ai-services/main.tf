@@ -47,13 +47,17 @@ resource "azurerm_cognitive_account" "foundry" {
   }
 
   identity {
-    type         = "SystemAssigned, UserAssigned"
-    identity_ids = [var.foundry_cmk_identity_id]
+    type         = var.foundry_cmk_enabled ? "SystemAssigned, UserAssigned" : "SystemAssigned"
+    identity_ids = var.foundry_cmk_enabled ? [var.foundry_cmk_identity_id] : []
   }
 
-  customer_managed_key {
-    key_vault_key_id   = var.cmk_key_vault_key_id
-    identity_client_id = var.foundry_cmk_identity_client_id
+  dynamic "customer_managed_key" {
+    for_each = var.foundry_cmk_enabled ? [1] : []
+
+    content {
+      key_vault_key_id   = var.cmk_key_vault_key_id
+      identity_client_id = var.foundry_cmk_identity_client_id
+    }
   }
 
   tags = var.tags
