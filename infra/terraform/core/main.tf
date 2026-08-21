@@ -248,6 +248,7 @@ resource "azurerm_servicebus_namespace" "this" {
   resource_group_name           = data.azurerm_resource_group.environment.name
   sku                           = "Premium"
   capacity                      = 1
+  premium_messaging_partitions  = 1
   local_auth_enabled            = false
   minimum_tls_version           = "1.2"
   public_network_access_enabled = false
@@ -299,7 +300,7 @@ module "ai_services" {
   document_intelligence_user_principal_ids            = {}
   foundry_user_principal_ids                          = {}
   foundry_openai_user_principal_ids                   = {}
-  cmk_key_vault_key_id                                = data.azurerm_key_vault_key.cmk.versionless_id
+  cmk_key_vault_key_id                                = data.azurerm_key_vault_key.cmk.versioned_id
   document_intelligence_cmk_identity_id               = data.azurerm_user_assigned_identity.cmk["cmk-document-intelligence"].id
   document_intelligence_cmk_identity_client_id        = data.azurerm_user_assigned_identity.cmk["cmk-document-intelligence"].client_id
   foundry_cmk_identity_id                             = data.azurerm_user_assigned_identity.cmk["cmk-foundry"].id

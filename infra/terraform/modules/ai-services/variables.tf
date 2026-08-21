@@ -117,7 +117,7 @@ variable "foundry_openai_user_principal_ids" {
 }
 
 variable "cmk_key_vault_key_id" {
-  description = "Versionless Key Vault key ID used to encrypt AI services."
+  description = "Versioned Key Vault key ID required to encrypt AI services."
   type        = string
 }
 
