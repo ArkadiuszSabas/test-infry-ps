@@ -196,21 +196,21 @@ role_assignments = {
   github-application-acr-push = {
     scope                            = "/subscriptions/16060ea2-28be-4b09-8e6d-060249d69ddd/resourceGroups/rg-ocr-dev-arksab/providers/Microsoft.ContainerRegistry/registries/acrocrdevarksab01"
     role_definition_name             = "AcrPush"
-    principal_id                     = "28750266-eb88-48d0-b604-74516764fc57"
+    principal_id                     = "8fc1b08a-0460-4139-a393-7ab120f70e33"
     principal_type                   = "ServicePrincipal"
     skip_service_principal_aad_check = true
   }
   github-application-acr-reader = {
     scope                            = "/subscriptions/16060ea2-28be-4b09-8e6d-060249d69ddd/resourceGroups/rg-ocr-dev-arksab/providers/Microsoft.ContainerRegistry/registries/acrocrdevarksab01"
     role_definition_name             = "Reader"
-    principal_id                     = "28750266-eb88-48d0-b604-74516764fc57"
+    principal_id                     = "8fc1b08a-0460-4139-a393-7ab120f70e33"
     principal_type                   = "ServicePrincipal"
     skip_service_principal_aad_check = true
   }
   github-application-container-apps = {
     scope                            = "/subscriptions/16060ea2-28be-4b09-8e6d-060249d69ddd/resourceGroups/rg-ocr-dev-arksab"
     role_definition_name             = "Container Apps Contributor"
-    principal_id                     = "28750266-eb88-48d0-b604-74516764fc57"
+    principal_id                     = "8fc1b08a-0460-4139-a393-7ab120f70e33"
     principal_type                   = "ServicePrincipal"
     skip_service_principal_aad_check = true
   }
