@@ -191,3 +191,4 @@ jobs:
           deploy_app llmmagic "$LLMMAGIC_CONTAINER_APP_NAME" "$LLMMAGIC_IMAGE"
           deploy_app worker "$WORKER_CONTAINER_APP_NAME" "$WORKER_IMAGE"
           deploy_app web "$WEB_CONTAINER_APP_NAME" "$WEB_IMAGE"
+
