@@ -18,6 +18,7 @@ container_apps_infrastructure_subnet_name = "snet-ocr-dev-aca-arksab"
 security_design_approved        = false
 resource_provider_list_verified = false
 runtime_dependencies_ready      = true
+foundry_enabled                 = true
 
 resource_names = {
   key_vault                  = "kv-ocr-dev"

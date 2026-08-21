@@ -28,6 +28,8 @@ resource "azurerm_cognitive_account" "document_intelligence" {
 }
 
 resource "azurerm_cognitive_account" "foundry" {
+  count = var.foundry_enabled ? 1 : 0
+
   name                = var.foundry_account_name
   location            = var.location
   resource_group_name = var.resource_group_name
@@ -58,8 +60,10 @@ resource "azurerm_cognitive_account" "foundry" {
 }
 
 resource "azurerm_cognitive_account_project" "foundry" {
+  count = var.foundry_enabled ? 1 : 0
+
   name                 = var.foundry_project_name
-  cognitive_account_id = azurerm_cognitive_account.foundry.id
+  cognitive_account_id = azurerm_cognitive_account.foundry[0].id
   location             = var.location
   display_name         = var.foundry_project_display_name
   description          = var.foundry_project_description
@@ -72,8 +76,10 @@ resource "azurerm_cognitive_account_project" "foundry" {
 }
 
 resource "azurerm_cognitive_deployment" "gpt" {
+  count = var.foundry_enabled ? 1 : 0
+
   name                 = var.gpt_deployment.name
-  cognitive_account_id = azurerm_cognitive_account.foundry.id
+  cognitive_account_id = azurerm_cognitive_account.foundry[0].id
   rai_policy_name      = "Microsoft.DefaultV2"
 
   dynamic_throttling_enabled = var.gpt_deployment.dynamic_throttling_enabled
@@ -120,17 +126,17 @@ resource "azurerm_role_assignment" "document_intelligence_user" {
 }
 
 resource "azurerm_role_assignment" "foundry_user" {
-  for_each = var.foundry_user_principal_ids
+  for_each = var.foundry_enabled ? var.foundry_user_principal_ids : {}
 
   name = uuidv5(local.role_assignment_uuid_namespace, lower(join("|", [
-    azurerm_cognitive_account.foundry.id,
+    azurerm_cognitive_account.foundry[0].id,
     local.cognitive_user_role_definition,
     each.value,
     "ServicePrincipal",
     "true",
   ])))
 
-  scope                            = azurerm_cognitive_account.foundry.id
+  scope                            = azurerm_cognitive_account.foundry[0].id
   role_definition_name             = local.cognitive_user_role_definition
   principal_id                     = each.value
   principal_type                   = "ServicePrincipal"
@@ -138,17 +144,17 @@ resource "azurerm_role_assignment" "foundry_user" {
 }
 
 resource "azurerm_role_assignment" "foundry_openai_user" {
-  for_each = var.foundry_openai_user_principal_ids
+  for_each = var.foundry_enabled ? var.foundry_openai_user_principal_ids : {}
 
   name = uuidv5(local.role_assignment_uuid_namespace, lower(join("|", [
-    azurerm_cognitive_account.foundry.id,
+    azurerm_cognitive_account.foundry[0].id,
     local.cognitive_openai_user_role_definition,
     each.value,
     "ServicePrincipal",
     "true",
   ])))
 
-  scope                            = azurerm_cognitive_account.foundry.id
+  scope                            = azurerm_cognitive_account.foundry[0].id
   role_definition_name             = local.cognitive_openai_user_role_definition
   principal_id                     = each.value
   principal_type                   = "ServicePrincipal"

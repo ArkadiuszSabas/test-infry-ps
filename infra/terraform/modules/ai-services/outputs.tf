@@ -20,40 +20,40 @@ output "document_intelligence_principal_id" {
 
 output "foundry_account_id" {
   description = "Azure AI Foundry account resource ID."
-  value       = azurerm_cognitive_account.foundry.id
+  value       = var.foundry_enabled ? azurerm_cognitive_account.foundry[0].id : null
 }
 
 output "foundry_account_name" {
   description = "Azure AI Foundry account name."
-  value       = azurerm_cognitive_account.foundry.name
+  value       = var.foundry_enabled ? azurerm_cognitive_account.foundry[0].name : null
 }
 
 output "foundry_endpoint" {
   description = "Azure AI Foundry account endpoint."
-  value       = azurerm_cognitive_account.foundry.endpoint
+  value       = var.foundry_enabled ? azurerm_cognitive_account.foundry[0].endpoint : null
 }
 
 output "foundry_project_id" {
   description = "Azure AI Foundry project resource ID."
-  value       = azurerm_cognitive_account_project.foundry.id
+  value       = var.foundry_enabled ? azurerm_cognitive_account_project.foundry[0].id : null
 }
 
 output "foundry_project_name" {
   description = "Azure AI Foundry project name."
-  value       = azurerm_cognitive_account_project.foundry.name
+  value       = var.foundry_enabled ? azurerm_cognitive_account_project.foundry[0].name : null
 }
 
 output "gpt_deployment_name" {
   description = "Configured GPT deployment name."
-  value       = var.gpt_deployment.name
+  value       = var.foundry_enabled ? var.gpt_deployment.name : null
 }
 
 output "gpt_model_name" {
   description = "GPT model name."
-  value       = var.gpt_deployment.model_name
+  value       = var.foundry_enabled ? var.gpt_deployment.model_name : null
 }
 
 output "gpt_model_version" {
   description = "GPT model version."
-  value       = var.gpt_deployment.model_version
+  value       = var.foundry_enabled ? var.gpt_deployment.model_version : null
 }

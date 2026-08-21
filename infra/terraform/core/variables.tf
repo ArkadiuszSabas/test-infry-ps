@@ -61,6 +61,12 @@ variable "runtime_dependencies_ready" {
   default     = false
 }
 
+variable "foundry_enabled" {
+  description = "Whether Core manages Azure AI Foundry, its project, and the GPT deployment."
+  type        = bool
+  default     = true
+}
+
 variable "virtual_network_name" {
   description = "Existing virtual network containing the Container Apps infrastructure subnet."
   type        = string

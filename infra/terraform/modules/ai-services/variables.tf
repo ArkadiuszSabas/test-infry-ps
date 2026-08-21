@@ -13,6 +13,12 @@ variable "foundry_account_name" {
   type        = string
 }
 
+variable "foundry_enabled" {
+  description = "Whether Azure AI Foundry, its project, and the GPT deployment are managed by this module."
+  type        = bool
+  default     = true
+}
+
 variable "foundry_sku_name" {
   description = "Azure AI Foundry account SKU name."
   type        = string
