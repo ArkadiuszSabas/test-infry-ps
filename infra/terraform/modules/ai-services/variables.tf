@@ -116,6 +116,31 @@ variable "foundry_openai_user_principal_ids" {
   type        = map(string)
 }
 
+variable "cmk_key_vault_key_id" {
+  description = "Versionless Key Vault key ID used to encrypt AI services."
+  type        = string
+}
+
+variable "document_intelligence_cmk_identity_id" {
+  description = "User-assigned identity permitted to use the Document Intelligence CMK."
+  type        = string
+}
+
+variable "document_intelligence_cmk_identity_client_id" {
+  description = "Client ID of the identity permitted to use the Document Intelligence CMK."
+  type        = string
+}
+
+variable "foundry_cmk_identity_id" {
+  description = "User-assigned identity permitted to use the Foundry CMK."
+  type        = string
+}
+
+variable "foundry_cmk_identity_client_id" {
+  description = "Client ID of the identity permitted to use the Foundry CMK."
+  type        = string
+}
+
 variable "tags" {
   description = "Common tags applied to AI services."
   type        = map(string)

@@ -34,6 +34,15 @@ variable "network_resource_group_name" {
   type        = string
 }
 
+variable "cmk" {
+  description = "Existing Key Vault and key used for customer-managed encryption keys."
+  type = object({
+    key_vault_name                = string
+    key_vault_resource_group_name = string
+    key_name                      = string
+  })
+}
+
 variable "security_design_approved" {
   description = "Explicit confirmation that ProService approved key management and private-access exceptions for this environment."
   type        = bool

@@ -1,14 +1,8 @@
 subscription_id                 = "fe31d3c8-576f-4c09-913c-0635306834ff0"
 location                        = "swedencentral"
 environment                     = "dev"
-application_resource_group_name = "rg-ocr-dev"
-network_resource_group_name     = "rg-ocr-dev-net"
-
-cmk = {
-  key_vault_name                = "kv-ocr-dev-cmk-arksab"
-  key_vault_resource_group_name = "rg-ocr-dev-arksab"
-  key_name                      = "cmk2048"
-}
+application_resource_group_name = "rg-ocr-dev-arksab"
+network_resource_group_name     = "rg-ocr-dev-net-arksab"
 
 # Replace with output container_apps_infrastructure_subnet_id from phase 01.
 container_apps_infrastructure_subnet_id = "REPLACE_PHASE_01_CONTAINER_APPS_SUBNET_ID"

@@ -12,6 +12,16 @@ resource "azurerm_postgresql_flexible_server" "this" {
   geo_redundant_backup_enabled  = var.geo_redundant_backup_enabled
   public_network_access_enabled = var.public_network_access_enabled
 
+  identity {
+    type         = "SystemAssigned, UserAssigned"
+    identity_ids = [var.cmk_user_assigned_identity_id]
+  }
+
+  customer_managed_key {
+    key_vault_key_id                  = var.cmk_key_vault_key_id
+    primary_user_assigned_identity_id = var.cmk_user_assigned_identity_id
+  }
+
   authentication {
     active_directory_auth_enabled = true
     password_auth_enabled         = false

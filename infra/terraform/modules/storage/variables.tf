@@ -57,6 +57,16 @@ variable "public_network_access_enabled" {
   default     = false
 }
 
+variable "cmk_key_vault_key_id" {
+  description = "Versionless Key Vault key ID used to encrypt the storage account."
+  type        = string
+}
+
+variable "cmk_user_assigned_identity_id" {
+  description = "User-assigned identity permitted to use the storage CMK."
+  type        = string
+}
+
 variable "tags" {
   description = "Common tags applied to Storage Account."
   type        = map(string)

@@ -9,13 +9,19 @@ resource "azurerm_cognitive_account" "document_intelligence" {
   local_auth_enabled            = false
   public_network_access_enabled = var.document_intelligence_public_network_access_enabled
 
-  identity {
-    type = "SystemAssigned"
-  }
-
   network_acls {
     default_action = var.network_acls_default_action
     ip_rules       = sort(tolist(var.document_intelligence_network_acls_ip_rules))
+  }
+
+  identity {
+    type         = "SystemAssigned, UserAssigned"
+    identity_ids = [var.document_intelligence_cmk_identity_id]
+  }
+
+  customer_managed_key {
+    key_vault_key_id   = var.cmk_key_vault_key_id
+    identity_client_id = var.document_intelligence_cmk_identity_client_id
   }
 
   tags = var.tags
@@ -33,13 +39,19 @@ resource "azurerm_cognitive_account" "foundry" {
   project_management_enabled    = true
   public_network_access_enabled = var.public_network_access_enabled
 
-  identity {
-    type = "SystemAssigned"
-  }
-
   network_acls {
     bypass         = "AzureServices"
     default_action = var.network_acls_default_action
+  }
+
+  identity {
+    type         = "SystemAssigned, UserAssigned"
+    identity_ids = [var.foundry_cmk_identity_id]
+  }
+
+  customer_managed_key {
+    key_vault_key_id   = var.cmk_key_vault_key_id
+    identity_client_id = var.foundry_cmk_identity_client_id
   }
 
   tags = var.tags

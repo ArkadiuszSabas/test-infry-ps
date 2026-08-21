@@ -1,6 +1,8 @@
 subscription_id                 = "fe31d3c8-576f-4c09-913c-0635306834ff0"
 location                        = "swedencentral"
 network_resource_group_name     = "rg-ocr-dev-net"
+# Existing Private DNS Zones are managed in a separate resource group.
+private_dns_resource_group_name = "RG W KTOREJ SA WSZYSTKIE DNS ZONES"
 application_resource_group_name = "rg-ocr-dev"
 
 # Set true only after ProService approves the network design and the ACA subnet delegation.

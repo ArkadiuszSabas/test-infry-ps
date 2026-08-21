@@ -14,6 +14,16 @@ resource "azurerm_storage_account" "this" {
   public_network_access_enabled   = var.public_network_access_enabled
   shared_access_key_enabled       = var.shared_access_key_enabled
 
+  identity {
+    type         = "UserAssigned"
+    identity_ids = [var.cmk_user_assigned_identity_id]
+  }
+
+  customer_managed_key {
+    key_vault_key_id          = var.cmk_key_vault_key_id
+    user_assigned_identity_id = var.cmk_user_assigned_identity_id
+  }
+
   blob_properties {
     versioning_enabled = true
 

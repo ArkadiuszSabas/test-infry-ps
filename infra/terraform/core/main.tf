@@ -4,6 +4,16 @@ data "azurerm_resource_group" "environment" {
   name = var.application_resource_group_name
 }
 
+data "azurerm_key_vault" "cmk" {
+  name                = var.cmk.key_vault_name
+  resource_group_name = var.cmk.key_vault_resource_group_name
+}
+
+data "azurerm_key_vault_key" "cmk" {
+  name         = var.cmk.key_name
+  key_vault_id = data.azurerm_key_vault.cmk.id
+}
+
 resource "terraform_data" "approved_design_guard" {
   lifecycle {
     precondition {
@@ -57,6 +67,14 @@ resource "terraform_data" "approved_design_guard" {
 }
 
 locals {
+  cmk_identities = {
+    "cmk-document-intelligence" = { name = "id-${var.environment}-cmk-document-intelligence" }
+    "cmk-foundry"               = { name = "id-${var.environment}-cmk-foundry" }
+    "cmk-postgresql"            = { name = "id-${var.environment}-cmk-postgresql" }
+    "cmk-servicebus"            = { name = "id-${var.environment}-cmk-servicebus" }
+    "cmk-storage"               = { name = "id-${var.environment}-cmk-storage" }
+  }
+
   container_apps = {
     for key, app in var.container_apps : key => {
       name                  = app.name
@@ -151,6 +169,15 @@ module "managed_identities" {
   depends_on = [terraform_data.approved_design_guard]
 }
 
+# CMK identities are owned and created by the separate uami-cmk root. Core only
+# reads them so it can attach them to the CMK-enabled Azure resources.
+data "azurerm_user_assigned_identity" "cmk" {
+  for_each = local.cmk_identities
+
+  name                = each.value.name
+  resource_group_name = data.azurerm_resource_group.environment.name
+}
+
 module "key_vault" {
   source = "../modules/key-vault"
 
@@ -180,6 +207,8 @@ module "storage" {
   shared_access_key_enabled         = false
   default_to_oauth_authentication   = true
   public_network_access_enabled     = false
+  cmk_key_vault_key_id              = data.azurerm_key_vault_key.cmk.versionless_id
+  cmk_user_assigned_identity_id     = data.azurerm_user_assigned_identity.cmk["cmk-storage"].id
   tags                              = var.tags
 }
 
@@ -216,7 +245,18 @@ resource "azurerm_servicebus_namespace" "this" {
   local_auth_enabled            = false
   minimum_tls_version           = "1.2"
   public_network_access_enabled = false
-  tags                          = var.tags
+
+  identity {
+    type         = "UserAssigned"
+    identity_ids = [data.azurerm_user_assigned_identity.cmk["cmk-servicebus"].id]
+  }
+
+  customer_managed_key {
+    key_vault_key_id = data.azurerm_key_vault_key.cmk.versionless_id
+    identity_id      = data.azurerm_user_assigned_identity.cmk["cmk-servicebus"].id
+  }
+
+  tags = var.tags
 }
 
 resource "azurerm_servicebus_queue" "this" {
@@ -253,8 +293,14 @@ module "ai_services" {
   document_intelligence_user_principal_ids            = {}
   foundry_user_principal_ids                          = {}
   foundry_openai_user_principal_ids                   = {}
+  cmk_key_vault_key_id                                = data.azurerm_key_vault_key.cmk.versionless_id
+  document_intelligence_cmk_identity_id               = data.azurerm_user_assigned_identity.cmk["cmk-document-intelligence"].id
+  document_intelligence_cmk_identity_client_id        = data.azurerm_user_assigned_identity.cmk["cmk-document-intelligence"].client_id
+  foundry_cmk_identity_id                             = data.azurerm_user_assigned_identity.cmk["cmk-foundry"].id
+  foundry_cmk_identity_client_id                      = data.azurerm_user_assigned_identity.cmk["cmk-foundry"].client_id
   tags                                                = var.tags
 }
+
 
 module "postgresql" {
   source = "../modules/postgresql"
@@ -272,6 +318,8 @@ module "postgresql" {
   database_names                = var.postgresql_database_names
   firewall_ip_addresses         = []
   public_network_access_enabled = false
+  cmk_key_vault_key_id          = data.azurerm_key_vault_key.cmk.versionless_id
+  cmk_user_assigned_identity_id = data.azurerm_user_assigned_identity.cmk["cmk-postgresql"].id
   active_directory_administrator = {
     object_id      = module.managed_identities.principal_ids["api-migrator"]
     principal_name = var.workload_identities["api-migrator"].name
