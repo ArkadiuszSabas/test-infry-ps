@@ -1,18 +1,6 @@
 name: Application build
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - .dockerignore
-      - deployments/**
-      - apps/web/**
-      - packages/**
-      - services/**
-      - pyproject.toml
-      - uv.lock
-      - .github/workflows/application-build.yml
   workflow_dispatch:
     inputs:
       environment:
