@@ -9,18 +9,25 @@ data "azurerm_user_assigned_identity" "workload" {
   resource_group_name = var.application_resource_group_name
 }
 
+locals {
+  role_assignment_principal_ids = {
+    for key, assignment in var.role_assignments :
+    key => try(data.azurerm_user_assigned_identity.workload[assignment.workload_identity_key].principal_id, assignment.principal_id)
+  }
+}
+
 resource "azurerm_role_assignment" "this" {
   for_each = var.role_assignments
 
   name = uuidv5(local.role_assignment_uuid_namespace, lower(join("|", [
     each.value.scope,
     each.value.role_definition_name,
-    each.value.principal_id,
+    local.role_assignment_principal_ids[each.key],
   ])))
 
   scope                            = each.value.scope
   role_definition_name             = each.value.role_definition_name
-  principal_id                     = try(data.azurerm_user_assigned_identity.workload[each.value.workload_identity_key].principal_id, each.value.principal_id)
+  principal_id                     = local.role_assignment_principal_ids[each.key]
   principal_type                   = each.value.principal_type
   skip_service_principal_aad_check = each.value.skip_service_principal_aad_check
 
