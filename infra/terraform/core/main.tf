@@ -345,11 +345,13 @@ module "container_apps" {
   resource_group_name        = data.azurerm_resource_group.environment.name
   log_analytics_workspace_id = module.observability.log_analytics_workspace_id
   infrastructure_subnet_id   = data.azurerm_subnet.container_apps_infrastructure.id
-  public_network_access      = "Disabled"
-  app_environment            = var.environment
-  registry_server            = module.container_registry.login_server
-  apps                       = local.container_apps
-  dapr_components            = local.dapr_components
-  jobs                       = local.container_app_jobs
-  tags                       = var.tags
+  # Temporary DEV access for browser-based smoke tests. Revert to "Disabled"
+  # after the tests and apply Core again to restore private-only access.
+  public_network_access = "Enabled"
+  app_environment       = var.environment
+  registry_server       = module.container_registry.login_server
+  apps                  = local.container_apps
+  dapr_components       = local.dapr_components
+  jobs                  = local.container_app_jobs
+  tags                  = var.tags
 }
