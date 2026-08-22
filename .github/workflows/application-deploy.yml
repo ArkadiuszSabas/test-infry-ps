@@ -171,24 +171,49 @@ jobs:
               --resource-group "$APP_RESOURCE_GROUP" \
               --image "$image" \
               --output none
-            read -r provisioning_state running_state actual_image < <(az containerapp show \
+            provisioning_state="$(az containerapp show \
               --name "$app_name" \
               --resource-group "$APP_RESOURCE_GROUP" \
-              --query "[properties.provisioningState,properties.runningStatus,properties.template.containers[0].image]" \
-              --output tsv)
+              --query properties.provisioningState \
+              --output tsv)"
+            actual_image="$(az containerapp show \
+              --name "$app_name" \
+              --resource-group "$APP_RESOURCE_GROUP" \
+              --query 'properties.template.containers[0].image' \
+              --output tsv)"
+            latest_revision="$(az containerapp show \
+              --name "$app_name" \
+              --resource-group "$APP_RESOURCE_GROUP" \
+              --query properties.latestRevisionName \
+              --output tsv)"
             [[ "$provisioning_state" == "Succeeded" ]] || {
               echo "::error::${app_name} provisioning state is ${provisioning_state}."; exit 1;
-            }
-            [[ "$running_state" == "Running" || "$running_state" == "RunningAtMaxScale" ]] || {
-              echo "::error::${app_name} running state is ${running_state}."; exit 1;
             }
             [[ "$actual_image" == "$image" ]] || {
               echo "::error::${app_name} is not running the requested image."; exit 1;
             }
+            [[ -n "$latest_revision" ]] || {
+              echo "::error::${app_name} did not create a latest revision."; exit 1;
+            }
+
+            for _ in {1..18}; do
+              running_state="$(az containerapp revision show \
+                --name "$app_name" \
+                --resource-group "$APP_RESOURCE_GROUP" \
+                --revision "$latest_revision" \
+                --query properties.runningState \
+                --output tsv)"
+              case "$running_state" in
+                Running|"Scale to 0") return 0 ;;
+                Failed)
+                  echo "::error::${app_name} revision ${latest_revision} failed to start."; exit 1 ;;
+              esac
+              sleep 10
+            done
+            echo "::error::${app_name} revision ${latest_revision} did not become Running."; exit 1
           }
 
           deploy_app api "$API_CONTAINER_APP_NAME" "$API_IMAGE"
           deploy_app llmmagic "$LLMMAGIC_CONTAINER_APP_NAME" "$LLMMAGIC_IMAGE"
           deploy_app worker "$WORKER_CONTAINER_APP_NAME" "$WORKER_IMAGE"
           deploy_app web "$WEB_CONTAINER_APP_NAME" "$WEB_IMAGE"
-
