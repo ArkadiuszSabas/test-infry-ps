@@ -166,72 +166,60 @@ jobs:
             local service="$1"
             local app_name="$2"
             local image="$3"
-            local desired_digest="${image##*@}"
             local provisioning_state
             local actual_image
             local latest_revision
             local running_state
 
-            echo "::group::Deploy ${service} to ${app_name}"
-            echo "[${service}] Requesting image update to ${desired_digest}."
+            echo "Started deploying application '${app_name}'."
             az containerapp update \
               --name "$app_name" \
               --resource-group "$APP_RESOURCE_GROUP" \
               --image "$image" \
-              --no-wait \
               --output none
 
-            for attempt in {1..36}; do
-              provisioning_state="$(az containerapp show \
-                --name "$app_name" \
-                --resource-group "$APP_RESOURCE_GROUP" \
-                --query properties.provisioningState \
-                --output tsv)"
-              actual_image="$(az containerapp show \
-                --name "$app_name" \
-                --resource-group "$APP_RESOURCE_GROUP" \
-                --query 'properties.template.containers[0].image' \
-                --output tsv)"
-              latest_revision="$(az containerapp show \
-                --name "$app_name" \
-                --resource-group "$APP_RESOURCE_GROUP" \
-                --query properties.latestRevisionName \
-                --output tsv)"
+            provisioning_state="$(az containerapp show \
+              --name "$app_name" \
+              --resource-group "$APP_RESOURCE_GROUP" \
+              --query properties.provisioningState \
+              --output tsv)"
+            actual_image="$(az containerapp show \
+              --name "$app_name" \
+              --resource-group "$APP_RESOURCE_GROUP" \
+              --query 'properties.template.containers[0].image' \
+              --output tsv)"
+            latest_revision="$(az containerapp show \
+              --name "$app_name" \
+              --resource-group "$APP_RESOURCE_GROUP" \
+              --query properties.latestRevisionName \
+              --output tsv)"
+            [[ "$provisioning_state" == "Succeeded" ]] || {
+              echo "::error::${app_name} provisioning state is ${provisioning_state}."; exit 1;
+            }
+            [[ "$actual_image" == "$image" ]] || {
+              echo "::error::${app_name} is not running the requested image."; exit 1;
+            }
+            [[ -n "$latest_revision" ]] || {
+              echo "::error::${app_name} did not create a latest revision."; exit 1;
+            }
 
-              if [[ "$provisioning_state" == "Failed" ]]; then
-                echo "::endgroup::"
-                echo "::error::${app_name} provisioning failed."
-                exit 1
-              fi
-
-              if [[ "$actual_image" != "$image" || -z "$latest_revision" ]]; then
-                echo "[${service}] Check ${attempt}/36: provisioning=${provisioning_state}; image update is still pending."
-                sleep 10
-                continue
-              fi
-
+            for _ in {1..18}; do
               running_state="$(az containerapp revision show \
                 --name "$app_name" \
                 --resource-group "$APP_RESOURCE_GROUP" \
                 --revision "$latest_revision" \
                 --query properties.runningState \
-                --output tsv 2>/dev/null || true)"
-              echo "[${service}] Check ${attempt}/36: provisioning=${provisioning_state}; revision=${latest_revision}; running=${running_state:-pending}."
+                --output tsv)"
               case "$running_state" in
                 Running|"Scale to 0")
-                  echo "::notice::${app_name} is running revision ${latest_revision} with ${desired_digest}."
-                  echo "::endgroup::"
+                  echo "Successfully deployed application '${app_name}'."
                   return 0 ;;
                 Failed)
-                  echo "::endgroup::"
-                  echo "::error::${app_name} revision ${latest_revision} failed to start."
-                  exit 1 ;;
+                  echo "::error::${app_name} revision ${latest_revision} failed to start."; exit 1 ;;
               esac
               sleep 10
             done
-            echo "::endgroup::"
-            echo "::error::${app_name} did not reach a running revision within 6 minutes."
-            exit 1
+            echo "::error::${app_name} revision ${latest_revision} did not become Running."; exit 1
           }
 
           deploy_app api "$API_CONTAINER_APP_NAME" "$API_IMAGE"
